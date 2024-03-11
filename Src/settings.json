@@ -1,0 +1,10 @@
+{
+   "inn":380002034411,
+   "short_name":"ООО Ромашка",
+   "account": "12345678901",
+   "corr_account": "12345678901",
+   "BIK": "123456789",
+   "type": "none",
+   "is_first_start": true,
+   "rep_format": "csv"
+}
