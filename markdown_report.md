@@ -1,4 +1,4 @@
 # units
 |base_unit|coefficient|description|id|is_error|name|
 |--|--|--|--|--|--|
-||1||fbffd360f072476ea3acb2becb483ba1|True|грамм|
+||1||721a8c80ae474d28a1661e18f174c9c7|True|грамм|

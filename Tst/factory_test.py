@@ -2,6 +2,16 @@ from Src.Models.unit_model import unit_model
 from Src.Logics.start_factory import start_factory
 from Src.settings_manager import settings_manager
 from Src.Storage.storage import storage
+from Src.Logics.report_factory import report_factory
+import unittest
+from Src.Models.group_model import group_model
+from Src.Models.nomenclature_model import nomenclature_model
+from Src.Logics.convertor import convertor
+from datetime import datetime
+from Src.Logics.convert_factory import convert_factory
+from Src.Logics.basic_convertor import basic_convertor
+from Src.Logics.reference_convert import reference_convertor
+from Src.Logics.datetime_convertor import datetime_convertor
 
 import unittest
 
@@ -77,13 +87,76 @@ class factory_test(unittest.TestCase):
         if manager.settings.is_first_start == True:
             assert result == True
             assert not factory.storage is None
-            assert storage.nomenclature_key in factory.storage.data
-            assert storage.receipt_key in factory.storage.data
-            assert storage.group_key in factory.storage.data
-            assert storage.unit_key in factory.storage.data
+            assert storage.nomenclature_key() in factory.storage.data
+            assert storage.receipt_key() in factory.storage.data
+            assert storage.group_key() in factory.storage.data
+            assert storage.unit_key() in factory.storage.data
         else:
             assert result == False    
         
                      
+            #
+    # Проверка конвертора (int, float, str, datetime, reference)
+    #   
+    def test_check_convertor(self):
+        group = group_model("test group")
+        nomen = nomenclature_model("test")
+        unit = unit_model("test unit")
+        date = datetime.now()
+        item = unit.create_gram()
+        inherit_item = item.create_killogram()
+        num = 1
+        float = 1.34
+        str = "123"
+        ref = reference_convertor()
+        dat = datetime_convertor()
+        bas = basic_convertor()
         
-       
+        
+        res1 = ref.convert(item)
+        res2 = ref.convert(nomen)
+        res3 = ref.convert(group)
+        res4 = ref.convert(unit)
+        res5 = dat.convert(date)
+        res6 = bas.convert(num)
+        res7 = bas.convert(float)
+        res8 = bas.convert(str)
+        res9 = ref.convert(inherit_item)
+
+        assert len(res1) > 0 and len(res2) > 0 and len(res3) > 0 and len(res4)  > 0 and len(res5) > 0 \
+        and len(res6) > 0 and len(res7) > 0 and len(res8) > 0
+        print(res9)
+
+
+    #
+    # Проверка фабричного ковертора
+    #
+    def test_fabric_convertor(self):
+        group = group_model("test group")
+        nomen = nomenclature_model("test")
+        unit = unit_model("test unit")
+        date = datetime.now()
+        item = unit.create_gram()
+        item1 = item.create_killogram()
+        num = 1
+        float = 1.34
+        str = "121231231234353"
+        con_fact = convert_factory()
+        bool = True
+        
+        
+        res1 = con_fact.convert(item)
+        res2 = con_fact.convert(nomen)
+        res3 = con_fact.convert(group)
+        res4 = con_fact.convert(unit)
+        res5 = con_fact.convert(date)
+        res6 = con_fact.convert(num)
+        res7 = con_fact.convert(float)
+        res8 = con_fact.convert(str)
+        res9 = con_fact.convert(item1)
+        res10 = con_fact.convert(bool)
+
+        assert len(res1) > 0 and len(res2) > 0 and len(res3) > 0 and len(res4)  > 0 and len(res5) > 0 \
+        and len(res6) > 0 and len(res7) > 0 and len(res8) > 0
+        print(res8)
+        
