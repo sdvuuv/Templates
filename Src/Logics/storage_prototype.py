@@ -1,7 +1,7 @@
 from Src.exceptions import argument_exception
 from Src.errors import error_proxy
 from datetime import datetime
-
+from Src.Models import nomenclature_model
 
 #
 # Прототип для обработки складских транзакций

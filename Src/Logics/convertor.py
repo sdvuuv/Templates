@@ -1,20 +1,25 @@
-from abc import ABC, abstractmethod
-from Src.reference import reference
-from datetime import datetime
+import abc
+from Src.errors import error_proxy
+from Src.exceptions import exception_proxy
 
-
-class convertor(ABC):
-    __fields = None
-
-    @property
-    def fields(self):
-        return self.__fields
-
-    def get_fields(self, object):
-        self.__fields = list(filter(lambda x: not x.startswith(
-            "_") and not x.startswith("create_"), dir(object)))
-        return self.fields
-
-    @abstractmethod
-    def convert(self, object) -> dict:
-        pass
+# 
+# Абстрактный класс для наследования.
+# Используется для формирования набора словарей. 
+#
+class convertor(error_proxy):
+    
+    @abc.abstractmethod
+    def serialize(self, field: str, object) -> dict:
+        """
+            Сконвертировать объект в словарь
+        Args:
+            source (_type_): Любой тип данных
+        """
+        exception_proxy.validate(field, str)
+        self.clear()
+         
+        
+        
+        
+        
+    
