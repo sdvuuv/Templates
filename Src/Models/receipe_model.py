@@ -58,8 +58,24 @@ class receipe_model(reference):
             # Получаем свойство size
             self._brutto += self._rows[position].size 
             
+
+    @property     
+    def brutto(self):
+        """
+            Вес брутто
+        Returns:
+            int : _description_
+        """
+        return self._brutto
+    
+    @brutto.setter
+    def brutto(self, value: int) -> int:
+        exception_proxy.validate(value, int)
+        self._brutto = value     
+            
     @property         
-    def netto(self):
+    def netto(self) -> int:
+
         return self._netto                        
         
     @netto.setter
@@ -96,6 +112,17 @@ class receipe_model(reference):
         """
         exception_proxy.validate(value, str)
         self._comments = value   
+
+        
+    @property            
+    def consist(self) -> list:
+        """
+            Состав рецепта
+        Returns:
+            _type_: _description_
+        """
+        return self._rows    
+
     
     
     @staticmethod

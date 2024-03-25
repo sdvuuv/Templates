@@ -2,18 +2,26 @@ from Src.Logics.convertor import convertor
 from datetime import datetime
 
 
+#
+# Конвертор datetime в словарь
+#
 class datetime_convertor(convertor):
-    @staticmethod
-    def convert(object: datetime):
+    
+    def serialize(self, field: str,  object):
         """
-            Корвертор дат
+            Подготовить словарь 
+        Args:
+            field (str): поле
+            object (_type_): значение
         """
-        return {
-            'year': object.year,
-            'month': object.month,
-            'day': object.day,
-            'hour': object.hour,
-            'minute': object.minute,
-            'second': object.second,
-            'microsecond': object.microsecond
-        }
+        super().serialize( field, object)
+      
+        if not isinstance(object, datetime):
+          self._error.error = f"Некорректный тип данных передан для конвертации. Ожидается: datetime. Передан: {type(object)}"
+          return None
+      
+        try:
+            return { field: object.strftime('%Y-%m-%d') }
+        except Exception as ex:
+            self.set_error(ex)    
+        

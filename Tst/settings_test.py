@@ -3,9 +3,11 @@ import unittest
 
 
 #
-# Набор автотестов для проверки работы модуля настроек
+# Набор автотестов для проверки работы модуmeля настроек
 #
 class settings_test(unittest.TestCase):
+    
+ 
     
     #
     # Проверить на корректность создания и загрузки файла с настройками
@@ -51,3 +53,11 @@ class settings_test(unittest.TestCase):
         
         # Проверки
         assert manager.error.is_empty == False
+        
+        
+            
+
+        
+
+ 
+
