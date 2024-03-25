@@ -4,11 +4,12 @@ import unittest
 from Src.settings_manager import settings_manager
 from Src.Storage.storage import storage
 from datetime import datetime
+from Src.Logics.storage_service import storage_service
 
 
-class prototype_test(unittest.TestCase):
+class service_test(unittest.TestCase):
 
-    def test_check_prototype(self):
+    def test_storage_service(self):
         # Подготовка
         manager = settings_manager()
         start = start_factory(manager.settings)
@@ -18,37 +19,39 @@ class prototype_test(unittest.TestCase):
 
         start_date = datetime.strptime("2024-01-01", "%Y-%m-%d")
         stop_date = datetime.strptime("2024-01-10", "%Y-%m-%d")
-        prototype = storage_prototype(data)
+        service = storage_service(data)
 
-        # Дейтсвие
-        result = prototype.filter(start_date, stop_date)
+        # Действие
+        filtered = service.create_turns(start_date, stop_date)
 
         # Проверка
-        assert isinstance(result, storage_prototype)
-        assert prototype.is_empty
+        print(filtered)
 
-    def test_check_filter_nomen_and_period(self):
+        assert filtered is not None
+        assert len(filtered) > 0
+        assert isinstance(filtered, list)
+
+    def test_service_filter(self):
         # Подготовка
         manager = settings_manager()
         start = start_factory(manager.settings)
         start.create()
         key = storage.storage_transaction_key()
         data = start.storage.data[key]
+
         start_date = datetime.strptime("2024-01-01", "%Y-%m-%d")
-        stop_date = datetime.strptime("2024-01-10", "%Y-%m-%d")
-        nomen_id = data[1].nomenclature.id
-        prototype = storage_prototype(data)
+        stop_date = datetime.strptime("2024-01-30", "%Y-%m-%d")
+        nomen_id = data[0].nomenclature.id
+        service = storage_service(data)
 
         # Дейтсвие
-        result = prototype.filter(start_date, stop_date)
-        result = result.filter_by_nomenclature(nomen_id)
+        result = service.create_turns_by_nomen(start_date, stop_date, nomen_id)
 
         # Проверка
         print(result)
-        assert isinstance(result, storage_prototype)
-        assert prototype.is_empty
+        assert len(result) > 0
 
-    def test_check_filter_by_receipt(self):
+    def test_service_transactions(self):
         # Подготовка
         manager = settings_manager()
         start = start_factory(manager.settings)
@@ -56,13 +59,12 @@ class prototype_test(unittest.TestCase):
         key = storage.storage_transaction_key()
         data = start.storage.data[key]
         receipt = start.storage.data[storage.receipt_key()][0]
-
-        prototype = storage_prototype(data)
+        service = storage_service(data)
+        storage_ = data[0].storage
 
         # Дейтсвие
-        result = prototype.filter_by_receipt(receipt)
+        result = service.create_transactions(receipt)
 
         # Проверка
-        assert len(result.data) == len(data)
-        assert isinstance(result, storage_prototype)
-        assert prototype.is_empty
+        print(result)
+        assert len(result) > 0
