@@ -89,4 +89,3 @@ class report_factory:
         
         return result
       
-

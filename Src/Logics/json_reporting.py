@@ -36,4 +36,3 @@ class json_reporting(reporting):
         
     
     
-
