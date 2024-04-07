@@ -7,17 +7,13 @@ from Src.exceptions import operation_exception
 #
 class csv_reporting(reporting):
     
-
     def create(self, storage_key: str):
         super().create(storage_key)
-
         result = ""
         delimetr = ";"
 
         # Исходные данные
-
         items = self.data[ storage_key ]
-
         if items == None:
             raise operation_exception("Невозможно сформировать данные. Данные не заполнены!")
         
@@ -32,7 +28,6 @@ class csv_reporting(reporting):
         for item in items:
             row = ""
             for field in self.fields:
-
                 attribute = getattr(item.__class__, field)
                 if isinstance(attribute, property):
                     value = getattr(item, field)
@@ -40,11 +35,9 @@ class csv_reporting(reporting):
                         value = ""
                         
                     row +=f"{value}{delimetr}"
-
                 
             result += f"{row[:-1]}\n"
             
         
         # Результат csv
-        
         return result

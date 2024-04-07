@@ -11,7 +11,6 @@ from Src.Logics.start_factory import start_factory
 from Src.settings import settings
 
 
-
 class reporting_test(unittest.TestCase):
     
     
@@ -80,7 +79,6 @@ class reporting_test(unittest.TestCase):
         item = unit_model.create_gram()
         list.append(item)
         data[  storage.unit_key()  ] = list 
-
         
         # Дейстие
         result = reporting.build( storage.unit_key(), data )
