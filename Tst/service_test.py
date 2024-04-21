@@ -1,37 +1,83 @@
-from Src.Logics.storage_service import storage_service
+from Src.Logics.Services.storage_service import storage_service
 from Src.Logics.start_factory import start_factory
 from Src.settings_manager import settings_manager
 from Src.Storage.storage import storage
 from Src.exceptions import operation_exception
+from Src.Logics.Services.reference_service import reference_service
+from Src.Logics.convert_factory import convert_factory
+from Src.Models.nomenclature_model import nomenclature_model
+from Src.Logics.storage_observer import storage_observer
+from Src.Models.event_type import event_type
 
 from datetime import datetime
 import unittest
+import uuid
 
 class service_test(unittest.TestCase):
-    
     #
-    # Проверить работу метода create_turns
+    # Проверить добавление reference (номенклатура)
     #
-
-    def test_check_create_turnss(self):
+    def test_check_add_item_reference(self):
         # Подготовка
         manager = settings_manager()
         start = start_factory(manager.settings)
         start.create()
-        stor = start.storage
-        key = storage.storage_transaction_key()
-        data = start.storage.data[key]
-        service = storage_service(data)
-        service.options = manager.settings
-        key = storage.turn_key()
+        key = storage.nomenclature_key()
+        data = start.storage.data[ key ]
+        convert = convert_factory()
+
+        if len(data) == 0:
+            raise operation_exception("Некорректно сформирован набор данных!")
+        
+        # Создаем новый элемент номенклатуры
+        dict =  convert.serialize( data[0] )
+        item = nomenclature_model().load(dict)
+        item.id = uuid.uuid4()
+
+        service = reference_service(data)
+        start_len = len(data)
 
         # Действие
-        result = service.create_blocked_turns()
-        start.save(key, result)
-        stor.save()
-        # Проверки
-        assert len(stor.data[key]) > 0
+        result = service.add( item )
 
+        # Проверка
+        assert result == True
+        assert len(data) - 1 == start_len
+
+    # 
+    # Проверить изменение reference (номенклатуры)
+    #
+    def test_check_change_item_reference(self):
+        # Подготовка
+        manager = settings_manager()
+        start = start_factory(manager.settings)
+        start.create()
+        key = storage.nomenclature_key()
+        data = start.storage.data[ key ]
+        convert = convert_factory()
+
+        if len(data) == 0:
+            raise operation_exception("Некорректно сформирован набор данных!")
+        
+        # Создаем новый элемент номенклатуры
+        dict =  convert.serialize( data[0] )
+        item = nomenclature_model().load(dict)
+        item.name = "test"
+
+        service = reference_service(data)
+        start_len = len(data)
+
+        # Действие
+        result = service.change( item )
+
+        # Проверка
+        assert result == True
+        assert len(data) == start_len
+
+
+    #
+    # Проверить работу метода create_turns
+    #
     def test_check_create_turns(self):
         # Подготовка
         manager = settings_manager()
@@ -187,9 +233,26 @@ class service_test(unittest.TestCase):
         # Проверка (транзакций должно быть больше)   
         assert start_len_transaction < stop_len_transaction   
         
+    
+    def test_check_observer_blocked_period(self):
+        # Подготовка
+        manager = settings_manager()
+        start = start_factory(manager.settings)
+        start.create()
+        key = storage.storage_transaction_key()
+        transactions_data = start.storage.data[ key ]
+        service = storage_service(transactions_data)
+          
+        
+        # Действие
+        try:
+            storage_observer.raise_event(  event_type.changed_block_period()  )
+            pass
+        except Exception as ex:
+            print(f"{ex}")
             
         
-            
+             
             
         
         
