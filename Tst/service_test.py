@@ -12,6 +12,26 @@ class service_test(unittest.TestCase):
     #
     # Проверить работу метода create_turns
     #
+
+    def test_check_create_turnss(self):
+        # Подготовка
+        manager = settings_manager()
+        start = start_factory(manager.settings)
+        start.create()
+        stor = start.storage
+        key = storage.storage_transaction_key()
+        data = start.storage.data[key]
+        service = storage_service(data)
+        service.options = manager.settings
+        key = storage.turn_key()
+
+        # Действие
+        result = service.create_blocked_turns()
+        start.save(key, result)
+        stor.save()
+        # Проверки
+        assert len(stor.data[key]) > 0
+
     def test_check_create_turns(self):
         # Подготовка
         manager = settings_manager()

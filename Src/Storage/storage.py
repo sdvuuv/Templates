@@ -133,6 +133,15 @@ class storage():
             _type_: _description_
         """
         return "receipe_model"
+
+    @staticmethod
+    def turn_key():
+        """
+            Список оборотов
+        Returns:
+            _type_: _description_
+        """
+        return "turn_model"
     
     # Код взят: https://github.com/UpTechCompany/GitExample/blob/6665bc70c4933da12f07c0a0d7a4fc638c157c40/storage/storage.py#L30
     
