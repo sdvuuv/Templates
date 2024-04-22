@@ -37,6 +37,6 @@ class post_processing_service(service):
     def clear_reciepe(self):
         key = storage.receipt_key()
         for index, cur_rec in enumerate(self.__storage.data[key]):
-            for cur_row in list(cur_rec.consist()):
-                if self.__nomenclature_id == cur_row.nomenclature.id():
+            for cur_row in list(cur_rec.consist.values()):
+                if self.__nomenclature_id == cur_row.nomenclature.id:
                     cur_rec.delete(cur_row)
