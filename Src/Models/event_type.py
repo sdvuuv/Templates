@@ -5,7 +5,7 @@ from Src.reference import reference
 # Типы событий
 #
 class event_type(reference):
- 
+
     @staticmethod
     def changed_block_period() -> str:
         """
@@ -23,3 +23,12 @@ class event_type(reference):
             str: _description_
         """
         return "deleted_nomenclature"
+
+    @staticmethod
+    def loggable_operation() -> str:
+        """
+            Событие о логировании операции
+        Returns:
+            str: _description_
+        """
+        return "loggable_operation"
