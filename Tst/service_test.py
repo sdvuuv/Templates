@@ -14,6 +14,73 @@ import unittest
 import uuid
 
 class service_test(unittest.TestCase):
+    
+    #
+    # Тест на удаление номенклатуры
+    #
+    def test_check_delete_item_reference(self):
+        # Подготовка
+        manager = settings_manager()
+        start = start_factory(manager.settings)
+        start.create()
+        key = storage.nomenclature_key()
+        data = start.storage.data[ key ]
+        if len(data) == 0:
+            raise operation_exception("Некорректно сформирован набор данных!")
+        service = reference_service(data)
+        start_len = len(data)
+        item = data[0]
+        
+        # Действие
+        result = service.delete( item )
+                
+        # Проверки
+        assert result == True  
+        
+    #
+    # Тест на удаление номенклатуры из рецепта при удалении карточки номенклатуры
+    #    
+    def test_check_delere_nomenclature_from_receipt(self):
+        # Подготовка
+        manager = settings_manager()
+        start = start_factory(manager.settings)
+        start.create()
+        key = storage.receipt_key()
+        receipt_data = start.storage.data[ key ]
+        if len(receipt_data) == 0:
+            raise operation_exception("Некорректно сформирован набор данных!")
+        
+        # Номенклатура первая из первого рецепта
+        len_receipt_row = len( receipt_data[0].consist )
+        receipt_row = receipt_data[0].consist[ list(receipt_data[0].consist.keys())[0] ]
+        item = receipt_row.nomenclature
+        
+        key = storage.nomenclature_key()
+        data = start.storage.data[ key ]
+        if len(data) == 0:
+            raise operation_exception("Некорректно сформирован набор данных!")
+        
+        service = reference_service(data)
+        
+        # Действие
+        result = service.delete( item ) 
+        
+        # Проверки
+        assert result == True     
+        
+        key = storage.receipt_key()
+        receipt_data = start.storage.data[ key ]
+        if len(receipt_data) == 0:
+            raise operation_exception("Некорректно сформирован набор данных!")
+        
+        # Номенклатура первая из первого рецепта
+        len_receipt_row_new = len( receipt_data[0].consist )
+        
+        assert len_receipt_row != len_receipt_row_new
+        
+        
+        
+    
     #
     # Проверить добавление reference (номенклатура)
     #
@@ -250,32 +317,6 @@ class service_test(unittest.TestCase):
             pass
         except Exception as ex:
             print(f"{ex}")
-
-    def test_check_delete_nom_observer(self):
-        # Подготовка
-        manager = settings_manager()
-        start = start_factory(manager.settings)
-        start.create()
-        key = storage.nomenclature_key()
-        nomenclature_data = start.storage.data[key]
-        service = reference_service(nomenclature_data)
-
-        control_recipe: receipe_model = list(start.storage.data[storage.receipt_key()])[0]
-        control_rows: list = control_recipe.rows()
-        control_nom_list = []
-        for row in control_rows:
-            control_nom_list.append(row.nomenclature)
-
-        # Действие
-        result = service.delete(start.storage.data[key][0])
-        cur_recipe = list(start.storage.data[storage.receipt_key()])[0]
-        cur_rows = cur_recipe.rows()
-        cur_nom_list = []
-        for row in cur_rows:
-            cur_nom_list.append(row.nomenclature)
-        # Проверки
-        assert result == True
-        assert len(control_nom_list) > len(cur_nom_list)
             
         
              
