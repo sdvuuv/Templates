@@ -2,7 +2,7 @@ from Src.exceptions import exception_proxy, argument_exception
 from Src.Logics.storage_observer import storage_observer
 from Src.Models.event_type import event_type
 from datetime import datetime
-from Src.Models.logging_type import logging_type
+import os
 
 
 #
@@ -14,23 +14,40 @@ class settings():
     _first_start = True
     _mode = "csv"
     _block_period = datetime.now
-    _logging_categories = {}
+    _current_path = str(os.path.split(__file__)[0])
+    
+
+    @property
+    def current_path(self):
+        """
+            Каталог записи файлов (лог / хранилище)
+        """
+        return self._current_path
+    
+    @current_path.setter
+    def current_path(self, value:str):
+        if value == "":
+            path = os.path.split(__file__)
+        else:
+            path = value
+
+        self._current_path = path
 
     @property
     def inn(self):
         """
             ИНН
         Returns:
-            int:
+            int: 
         """
         return self._inn
-
+    
     @inn.setter
     def inn(self, value: int):
         exception_proxy.validate(value, int)
         self._inn = value
-
-    @property
+         
+    @property     
     def short_name(self):
         """
             Короткое наименование организации
@@ -38,23 +55,28 @@ class settings():
             str:
         """
         return self._short_name
-
+    
     @short_name.setter
-    def short_name(self, value: str):
-        exception_proxy.validate(value, str)
-        self._short_name = value
+    def short_name(self, value:str):
+        if value == "":
+            path = os.path.split(__file__)
+        else:
+            path = value
 
-    @property
+        self._short_name = path
+        
+        
+    @property    
     def is_first_start(self):
         """
            Флаг Первый старт
         """
-        return self._first_start
-
-    @is_first_start.setter
+        return self._first_start    
+            
+    @is_first_start.setter        
     def is_first_start(self, value: bool):
         self._first_start = value
-
+        
     @property
     def report_mode(self):
         """
@@ -63,12 +85,14 @@ class settings():
             _type_: _description_
         """
         return self._mode
-
+    
+    
     @report_mode.setter
     def report_mode(self, value: str):
         exception_proxy.validate(value, str)
-
+        
         self._mode = value
+    
 
     @property
     def block_period(self):
@@ -76,40 +100,27 @@ class settings():
             Дата блокировки периода
         """
         return self._block_period
-
+    
     @block_period.setter
     def block_period(self, value):
         legacy_period = self._block_period
-
+        
         if isinstance(value, datetime):
             self._block_period = value
-
+            
             if legacy_period != self._block_period:
-                storage_observer.raise_event(event_type.changed_block_period())
+                storage_observer.raise_event(  event_type.changed_block_period()  )    
 
             return
 
         if isinstance(value, str):
             try:
-                self._block_period = datetime.strptime(value, "%Y-%m-%d")
-                if legacy_period != self._block_period:
-                    storage_observer.raise_event(event_type.changed_block_period())
+               self._block_period = datetime.strptime(value, "%Y-%m-%d")    
+               if legacy_period != self._block_period:
+                    storage_observer.raise_event(  event_type.changed_block_period()  )    
             except Exception as ex:
                 raise argument_exception(f"Невозможно сконвертировать сроку в дату! {ex}")
         else:
             raise argument_exception("Некорректно переданы параметры!")
-
-    @property
-    def logging_categories(self):
-        """
-            Категории логирования
-        Returns:
-            int:
-        """
-        return self._logging_categories
-
-    @logging_categories.setter
-    def logging_categories(self, key: str, value: str):
-        exception_proxy.validate(value, str)
-        exception_proxy.validate(key, str)
-        self._logging_categories[key] = value
+            
+    
