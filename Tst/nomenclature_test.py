@@ -3,6 +3,7 @@ from Src.Models.nomenclature_model import  nomenclature_model
 from Src.Models.unit_model import unit_model
 from Src.exceptions import argument_exception
 from Src.Logics.Services.log_service import log_service
+from Src.Logics.Services.console_log_service import console_log_service
 
 import unittest
 
@@ -14,6 +15,7 @@ class nomenclature_test(unittest.TestCase):
     def __init__(self, methodName: str = "runTest") -> None:
         super().__init__(methodName)
         log_service()
+        console_log_service()
 
     # 
     # Проверить создание новой карточки номенклатуры

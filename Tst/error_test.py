@@ -1,5 +1,6 @@
 from Src.errors import error_proxy 
 from Src.Logics.Services.log_service import log_service
+from Src.Logics.Services.console_log_service import console_log_service
 
 import unittest
 

@@ -6,6 +6,7 @@ from Src.Logics.Services.log_service import log_service
 
 import unittest
 from datetime import datetime
+from Src.Logics.Services.console_log_service import console_log_service
 
 
 #
@@ -16,6 +17,7 @@ class settings_test(unittest.TestCase):
     def __init__(self, methodName: str = "runTest") -> None:
         super().__init__(methodName)
         log_service()
+        console_log_service()
 
     # 
     # Проверить действие наблюдателя при изменении даты блокировки
