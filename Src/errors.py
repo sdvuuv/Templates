@@ -137,11 +137,15 @@ class error_proxy:
             Сформировать сообщение для записи лога
         """
         observer_item = storage_observer.get( storage_observer .log_service_key() )
+        observer_item_console = storage_observer.get( storage_observer .console_log_service_key() )
+
         if observer_item is not None:
             item = error_proxy()
             item.error = message
             item.log_type = log_type
 
             observer_item.item = item
+            if observer_item_console is not None:
+                observer_item_console.item = item
             storage_observer.raise_event( "write_log" )
                 

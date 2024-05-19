@@ -8,6 +8,7 @@ from Src.exceptions import operation_exception
 from Src.Models.storage_model import storage_model
 from Src.Models.unit_model import unit_model
 from Src.Logics.Services.log_service import log_service
+from Src.Logics.Services.console_log_service import console_log_service
 
 #
 # Набор содульных тестов для проверки процессов обработки данных
@@ -17,6 +18,8 @@ class processing_test(unittest.TestCase):
     def __init__(self, methodName: str = "runTest") -> None:
         super().__init__(methodName)
         log_service()
+        console_log_service()
+
     
     #
     # Проверить работу фабрики процессов
