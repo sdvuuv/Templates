@@ -11,6 +11,7 @@ from Src.Models.storage_model import storage_model
 from Src.settings import settings
 from Src.Storage.storage import storage
 from Src.exceptions import exception_proxy, operation_exception, argument_exception
+from Src.Logics.Services.log_service import log_service
 
 #
 # Класс для обработки данных. Начало работы приложения
@@ -25,6 +26,8 @@ class start_factory:
         exception_proxy.validate(_options, settings)
         self.__oprions = _options
         self.__storage = _storage
+        log_service()
+
         
     
     def __save(self, key:str, items: list):
@@ -38,6 +41,7 @@ class start_factory:
         
         if self.__storage == None:
             self.__storage = storage()
+            self.__storage.clear()
             
         self.__storage.data[ key ] = items
         
